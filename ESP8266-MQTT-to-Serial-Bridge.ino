@@ -6,25 +6,10 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-#include <String.h>
-
-#include <time.h>                       // time() ctime()
-#include <sys/time.h>                   // struct timeval
-#include <coredecls.h>                  // settimeofday_cb()
-
-//NTP
-#define TZ              0       // (utc+) TZ in hours
-#define DST_MN          0      // use 60mn for summer time in some countries
-#define TZ_MN           ((TZ)*60)
-#define TZ_SEC          ((TZ)*3600)
-#define DST_SEC         ((DST_MN)*60)
-timeval cbtime;      // time set in callback
-bool cbtime_set = false;
-
 
 //WIFIsettings
-String ssid;
-String  password;
+String ssid = "";
+String password = "";
 
 bool wificonnected = false;
 
@@ -32,7 +17,7 @@ bool wificonnected = false;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-String mqtt_server;
+String mqtt_server = "";
 int mqtt_port = 1883;
 String mqtt_user = "";
 String mqtt_pass = "";
@@ -48,32 +33,7 @@ long lastMsg = 0;
 char msg[bufferSize];
 long int value = 0;
 
-void time_is_set_cb(void) {
-  gettimeofday(&cbtime, NULL);
-  cbtime_set = true;
-  if (ssid!="" && WiFi.status() == WL_CONNECTED) {
-    cbtime_set = true;
-  }
-  else {
-    cbtime_set = false;
-  }
-}
-
 void mqtt_cb(char* topic, byte* payload, unsigned int length) {
-  CRC32_reset();
-  for (size_t i = 0; i < strlen(topic); i++) {
-    CRC32_update(topic[i]);
-  }
-  
-  CRC32_update(' ');
-  
-  for (size_t i = 0; i < length; i++) {
-    CRC32_update(payload[i]);
-  }
-  uint32_t checksum = CRC32_finalize();
-  
-  Serial.print(checksum);
-  Serial.print(" ");
   Serial.print(topic);
   Serial.print (" ");
   Serial.write (payload, length);
@@ -114,7 +74,7 @@ bool reconnect() {
       if (client.connect(clientId.c_str(), mqtt_user.c_str(), mqtt_pass.c_str())) {
         sendCommand("mqtt connected");
         return true;
-      }
+      } 
     }
     else {
       if (client.connect(clientId.c_str())) {
@@ -138,9 +98,6 @@ void setup() {
   WiFi.mode(WIFI_STA);
   client.setCallback(mqtt_cb);
   
-  //NTP
-  settimeofday_cb(time_is_set_cb);
-  configTime(TZ_SEC, DST_SEC, "pool.ntp.org");  
 }
 
 void loop() {
@@ -180,4 +137,3 @@ void loop() {
   commandLoop();
   yield();
 }
-
