@@ -3,20 +3,8 @@
  * Author: rkubera https://github.com/rkubera/
  * License: MIT
  */
- 
-#include <String.h>
 
 void sendCommand (String myCommand) {
-  CRC32_reset();
-  CRC32_update('[');
-  for (size_t i = 0; i < myCommand.length(); i++) {
-    CRC32_update(myCommand[i]);
-  }
-  CRC32_update(']');
-  uint32_t checksum = CRC32_finalize();
-  
-  Serial.print(checksum);
-  Serial.print(" ");
   Serial.print("[");
   Serial.print(myCommand);
   Serial.println("]");
@@ -29,20 +17,7 @@ void commandLoop() {
 }
 
 void getCommand(String payload) {
-  if (payload=="timestamp") {
-    uint32_t mytimestamp = 0;
-    mytimestamp = time(nullptr);
-    String command = "timestamp ";
-    if (cbtime_set==true) {
-        mytimestamp = time(nullptr);
-        if (mytimestamp<1000000) {
-          mytimestamp = 0;
-        }
-    }
-    command = command+(String) mytimestamp;
-    sendCommand(command);
-  }
-  else if (payload=="echo") {
+  if (payload=="echo") {
     sendCommand("echo");
   }
   else if (payload=="ip") {
@@ -140,7 +115,7 @@ void mqttUserPassCommand(String payload) {
   if (tmpIdx>-1) {
     //mqtt server and port
     mqtt_user = payload.substring(0, tmpIdx);
-    mqtt_pass = payload.substring(tmpIdx+1).toInt();
+    mqtt_pass = payload.substring(tmpIdx+1);
   }
   else {
     //mqtt only
@@ -234,5 +209,3 @@ void unsubscribeCommand (String subscription) {
   client.unsubscribe(subscription.c_str());
   sendCommand("subscription removed");
 }
-
-
