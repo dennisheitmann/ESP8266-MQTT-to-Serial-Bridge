@@ -1,5 +1,5 @@
 # ESP8266 MQTT Wifi Client to Serial Bridge
-forked from rkubera (Radek Kubera) https://github.com/rkubera
+forked from rkubera (Radek Kubera) https://github.com/rkubera (removed CRC32, NTP, some bug-fixes)
 - License: MIT
 
 ## Features
