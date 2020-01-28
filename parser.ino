@@ -3,8 +3,6 @@
  * Author: rkubera https://github.com/rkubera/
  * License: MIT
  */
- 
-#include <String.h>
 
 bool getSerialBuffer (char* buf, int &idx) {
   idx = 0;
@@ -87,5 +85,3 @@ void parseLines(char* buf) {
     myBuff = myBuff.substring(start);
   }
 }
-
-
