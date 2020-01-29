@@ -57,7 +57,7 @@ Commands (must be finished with \n EOL):
   - response: [subscription added] or [mqtt not connected]
 - Unsubscribe topic mytopic
   - command: unsubscribe mytopic
-  - response: [subscription removed] or CRC32 [mqtt not connected]
+  - response: [subscription removed] or [mqtt not connected]
 
 6) <b>get</b>
 - Get echo (check if ESP8266 is live)
@@ -74,7 +74,7 @@ Commands (must be finished with \n EOL):
   - resonse: [myssid]
 - Get MQTT Server status
   - command: get mqttstatus
-  - response: [mqtt connected] or CRC32 [mqtt not connected]
+  - response: [mqtt connected] or [mqtt not connected]
 - Get mqtt Server
   - comand: get mqttserver
   - response: [mymqttserver]
